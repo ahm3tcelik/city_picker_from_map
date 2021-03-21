@@ -1,8 +1,8 @@
 name: city_picker_from_map
 description: A new Flutter package project.
 version: 0.0.1
-author:
-homepage:
+author: Ahmet Çelik
+homepage: https://github.com/ahm3tcelik
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  svg_path_parser: ^1.0.0
 
 dev_dependencies:
   flutter_test:

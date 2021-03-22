@@ -19,7 +19,9 @@ class _HomeViewState extends State<HomeView> {
           IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
               onPressed: () {
-                _mapKey.currentState?.clearSelect();
+                setState(() {
+                  _mapKey.currentState?.clearSelect();
+                });
               })
         ],
       ),
@@ -31,6 +33,8 @@ class _HomeViewState extends State<HomeView> {
             constrained: true,
             child: CityPickerMap(
               key: _mapKey,
+              width: double.infinity,
+              height: double.infinity,
               country: TurkeyMap(),
               onChanged: (city) {
                 setState(() {

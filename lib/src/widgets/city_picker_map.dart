@@ -1,11 +1,13 @@
-import 'package:city_picker_from_map/src/size_controller.dart';
 import 'package:flutter/material.dart';
 import './city_painter.dart';
 import '../interface/ISvgCountry.dart';
 import '../models/city.dart';
 import '../parser.dart';
+import '../size_controller.dart';
 
 class CityPickerMap extends StatefulWidget {
+  final double? width;
+  final double? height;
   final ISvgCountry country;
   final Function(City? city) onChanged;
   final Color? strokeColor;
@@ -17,6 +19,8 @@ class CityPickerMap extends StatefulWidget {
       {Key? key,
       required this.country,
       required this.onChanged,
+      this.width,
+      this.height,
       this.strokeColor,
       this.selectedColor,
       this.dotColor,
@@ -48,12 +52,10 @@ class CityPickerMapState extends State<CityPickerMap> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Stack(
-        children: [
-          for (var city in _cityList) _buildStackItem(city),
-        ],
-      ),
+    return Stack(
+      children: [
+        for (var city in _cityList) _buildStackItem(city),
+      ],
     );
   }
 
@@ -65,6 +67,8 @@ class CityPickerMapState extends State<CityPickerMap> {
           : _useButton(city),
       child: CustomPaint(
         child: Container(
+          width: widget.width ?? double.infinity,
+          height: widget.height ?? double.infinity,
           constraints: BoxConstraints(
               maxWidth: mapSize?.width ?? 0, maxHeight: mapSize?.height ?? 0),
           alignment: Alignment.center,
@@ -81,24 +85,20 @@ class CityPickerMapState extends State<CityPickerMap> {
   }
 
   void _toggleButton(City city) {
-    {
-      setState(() {
-        if (selectedCity == city)
-          selectedCity = null;
-        else {
-          selectedCity = city;
-        }
-        widget.onChanged.call(selectedCity);
-      });
-    }
+    setState(() {
+      if (selectedCity == city)
+        selectedCity = null;
+      else {
+        selectedCity = city;
+      }
+      widget.onChanged.call(selectedCity);
+    });
   }
 
   void _useButton(City city) {
-    {
-      setState(() {
-        selectedCity = city;
-        widget.onChanged.call(selectedCity);
-      });
-    }
+    setState(() {
+      selectedCity = city;
+      widget.onChanged.call(selectedCity);
+    });
   }
 }

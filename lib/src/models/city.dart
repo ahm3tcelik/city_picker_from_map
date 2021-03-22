@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 class City {
   String id;
   String title;
-  String path;
+  Path path;
 
   City({required this.id, required this.title, required this.path});
  }

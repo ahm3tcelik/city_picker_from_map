@@ -1,34 +1,32 @@
 import 'package:city_picker_from_map/city_picker_from_map.dart';
+import 'package:city_picker_from_map/src/size_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:svg_path_parser/svg_path_parser.dart';
 
 class CityPainter extends CustomPainter {
   final City city;
   final City? selectedCity;
-  late final Path path;
   final Color? strokeColor;
   final Color? selectedColor;
   final Color? dotColor;
+
+  final sizeController = SizeController.instance;
 
   CityPainter(
       {required this.city,
       required this.selectedCity,
       this.selectedColor,
       this.strokeColor,
-      this.dotColor}) {
-    path = parseSvgPath(city.path);
-  }
+      this.dotColor});
 
   @override
   void paint(Canvas canvas, Size size) {
-    // print('Canvas Sizes: ${size.width} ${size.height}');
 
     final pen = Paint()
       ..color = strokeColor ?? Colors.white60
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
-    final selectedPed = Paint()
+    final selectedPen = Paint()
       ..color = selectedColor ?? Colors.blue
       ..strokeWidth = 1.0
       ..style = PaintingStyle.fill;
@@ -38,15 +36,16 @@ class CityPainter extends CustomPainter {
       ..strokeWidth = 3.0
       ..style = PaintingStyle.fill;
 
-    final bounds = path.getBounds();
+    final bounds = city.path.getBounds();
 
-    // canvas.scale(0.9, 0.9);
+
+    // canvas.scale(0.6, 0.6);
 
     if (city.id == selectedCity?.id) {
-      canvas.drawPath(path, selectedPed);
+      canvas.drawPath(city.path, selectedPen);
     }
     canvas.drawCircle(bounds.center, 3.0, redDot);
-    canvas.drawPath(path, pen);
+    canvas.drawPath(city.path, pen);
   }
 
   @override
@@ -54,7 +53,7 @@ class CityPainter extends CustomPainter {
 
   @override
   bool hitTest(Offset position) {
-    // return path.contains(position.scale(10/9, 10/9));
-    return path.contains(position);
+    // return city.path.contains(position.scale(10/6, 10/6));
+    return city.path.contains(position);
   }
 }

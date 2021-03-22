@@ -1,5 +1,5 @@
+import 'package:city_picker_from_map/src/size_controller.dart';
 import 'package:flutter/material.dart';
-
 import './city_painter.dart';
 import '../interface/ISvgCountry.dart';
 import '../models/city.dart';
@@ -11,54 +11,65 @@ class CityPickerMap extends StatefulWidget {
   final Color? strokeColor;
   final Color? selectedColor;
   final Color? dotColor;
+  final bool? actAsToggle;
 
   CityPickerMap(
-      {required this.country,
+      {Key? key,
+      required this.country,
       required this.onChanged,
       this.strokeColor,
       this.selectedColor,
-      this.dotColor});
+      this.dotColor,
+      this.actAsToggle}) : super(key: key);
 
   @override
-  _CityPickerMapState createState() => _CityPickerMapState();
+  CityPickerMapState createState() => CityPickerMapState();
 }
 
-class _CityPickerMapState extends State<CityPickerMap> {
-  late final List<City> cityList;
+class CityPickerMapState extends State<CityPickerMap> {
+  late final List<City> _cityList;
   City? selectedCity;
+
+  final _sizeController = SizeController.instance;
+  Size? mapSize;
 
   @override
   void initState() {
-    cityList = Parser.instance.svgToCityList(widget.country);
+    _cityList = Parser.instance.svgToCityList(widget.country);
+    mapSize = _sizeController.mapSize;
     super.initState();
+  }
+
+  void clearSelect() {
+    setState(() {
+      selectedCity = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        for (var city in cityList) _buildStackItem(city),
-      ],
+    return SizedBox(
+      child: Stack(
+        children: [
+          for (var city in _cityList) _buildStackItem(city),
+        ],
+      ),
     );
   }
 
   Widget _buildStackItem(City city) {
-    // print("Screem Sizes: ${MediaQuery.of(context).size.width} ${MediaQuery.of(context).size.height}");
-
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
-      onTap: () {
-        setState(() {
-          selectedCity = city;
-          widget.onChanged.call(selectedCity);
-        });
-      },
+      onTap: () => (widget.actAsToggle ?? false)
+          ? _toggleButton(city)
+          : _useButton(city),
       child: CustomPaint(
         child: Container(
+          constraints: BoxConstraints(
+              maxWidth: mapSize?.width ?? 0, maxHeight: mapSize?.height ?? 0),
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
         ),
+        isComplex: true,
         foregroundPainter: CityPainter(
             city: city,
             selectedCity: selectedCity,
@@ -67,5 +78,27 @@ class _CityPickerMapState extends State<CityPickerMap> {
             strokeColor: widget.strokeColor),
       ),
     );
+  }
+
+  void _toggleButton(City city) {
+    {
+      setState(() {
+        if (selectedCity == city)
+          selectedCity = null;
+        else {
+          selectedCity = city;
+        }
+        widget.onChanged.call(selectedCity);
+      });
+    }
+  }
+
+  void _useButton(City city) {
+    {
+      setState(() {
+        selectedCity = city;
+        widget.onChanged.call(selectedCity);
+      });
+    }
   }
 }

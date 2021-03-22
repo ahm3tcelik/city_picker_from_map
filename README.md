@@ -2,6 +2,8 @@
 
 A new Flutter package project.
 
+![Preview](https://github.com/ahm3tcelik/city_picker_from_map/blob/master/showcase/first.gif)
+
 ## Getting Started
 
 This project is a starting point for a Dart

@@ -1,7 +1,7 @@
-import 'package:city_picker_from_map/src/size_controller.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import './size_controller.dart';
 import './constant.dart';
-import './interface/ISvgCountry.dart';
 import './models/city.dart';
 
 class Parser {
@@ -16,13 +16,18 @@ class Parser {
 
   Parser._init();
 
-  List<City> svgToCityList(ISvgCountry country) {
+  Future<List<City>> svgToCityList(String country) async {
+
+    final svgCountry = await rootBundle.loadString(
+      '${Constants.ASSETS_PATH}/$country'
+    );
+
     List<City> cityList = [];
 
     final regExp = RegExp(Constants.MAP_REGEXP,
         multiLine: true, caseSensitive: false, dotAll: false);
 
-    regExp.allMatches(country.svgData).forEach((cityData) {
+    regExp.allMatches(svgCountry).forEach((cityData) {
       final city = City(
           id: cityData.group(1)!,
           title: cityData.group(2)!,
@@ -31,6 +36,7 @@ class Parser {
       sizeController.addBounds(city.path.getBounds());
       cityList.add(city);
     });
+    print(cityList.first.path.getBounds());
     return cityList;
   }
 }

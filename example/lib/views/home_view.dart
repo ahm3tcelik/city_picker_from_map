@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
               key: _mapKey,
               width: double.infinity,
               height: double.infinity,
-              country: TurkeyMap(),
+              map: Maps.TURKEY,
               onChanged: (city) {
                 setState(() {
                   selectedCity = city;

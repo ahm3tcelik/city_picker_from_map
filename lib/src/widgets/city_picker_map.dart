@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './city_painter.dart';
-import '../interface/ISvgCountry.dart';
 import '../models/city.dart';
 import '../parser.dart';
 import '../size_controller.dart';
@@ -8,7 +7,7 @@ import '../size_controller.dart';
 class CityPickerMap extends StatefulWidget {
   final double? width;
   final double? height;
-  final ISvgCountry country;
+  final String map;
   final Function(City? city) onChanged;
   final Color? strokeColor;
   final Color? selectedColor;
@@ -17,7 +16,7 @@ class CityPickerMap extends StatefulWidget {
 
   CityPickerMap(
       {Key? key,
-      required this.country,
+      required this.map,
       required this.onChanged,
       this.width,
       this.height,
@@ -31,7 +30,7 @@ class CityPickerMap extends StatefulWidget {
 }
 
 class CityPickerMapState extends State<CityPickerMap> {
-  late final List<City> _cityList;
+  final List<City> _cityList = [];
   City? selectedCity;
 
   final _sizeController = SizeController.instance;
@@ -39,9 +38,19 @@ class CityPickerMapState extends State<CityPickerMap> {
 
   @override
   void initState() {
-    _cityList = Parser.instance.svgToCityList(widget.country);
-    mapSize = _sizeController.mapSize;
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      _loadCityList();
+    });
+  }
+
+  _loadCityList() async {
+    final list = await Parser.instance.svgToCityList(widget.map);
+    _cityList.clear();
+    setState(() {
+      _cityList.addAll(list);
+      mapSize = _sizeController.mapSize;
+    });
   }
 
   void clearSelect() {
@@ -52,10 +61,12 @@ class CityPickerMapState extends State<CityPickerMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        for (var city in _cityList) _buildStackItem(city),
-      ],
+    return Container(
+      child: Stack(
+        children: [
+          for (var city in _cityList) _buildStackItem(city),
+        ],
+      ),
     );
   }
 

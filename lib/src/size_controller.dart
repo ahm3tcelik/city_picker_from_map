@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:city_picker_from_map/src/models/map_area.dart';
 
 class SizeController {
@@ -39,4 +38,29 @@ class SizeController {
 
     mapSize = Size(width, height);
   }
+
+  double calculateScale(Size? containerSize) {
+    if (containerSize == null)
+      return 1.0;
+
+
+    // Aspect Ratio
+    double newWidth = containerSize.width, newHeight = containerSize.height;
+    if (containerSize.width > containerSize.height) {
+      newHeight = 1 /(mapSize.aspectRatio / containerSize.width);
+    }
+    else {
+      newWidth = 1 / (mapSize.aspectRatio / containerSize.height);
+    }
+    containerSize = Size(newWidth, newHeight);
+
+    // Scale for Responsive UI
+    double scale1 = containerSize.width / mapSize.width;
+    double scale2 = containerSize.height / mapSize.height;
+    double mapScale = scale1 > scale2 ? scale1 : scale2;
+
+    return mapScale;
+  }
+  
+  double inverseOfScale(double scale) => 1.0/scale;
 }

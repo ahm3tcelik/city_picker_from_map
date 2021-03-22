@@ -11,6 +11,8 @@ class CityPainter extends CustomPainter {
 
   final sizeController = SizeController.instance;
 
+  double _scale = 1.0;
+
   CityPainter(
       {required this.city,
       required this.selectedCity,
@@ -38,8 +40,8 @@ class CityPainter extends CustomPainter {
 
     final bounds = city.path.getBounds();
 
-
-    // canvas.scale(0.6, 0.6);
+    _scale = sizeController.calculateScale(size);
+    canvas.scale(_scale);
 
     if (city.id == selectedCity?.id) {
       canvas.drawPath(city.path, selectedPen);
@@ -53,7 +55,7 @@ class CityPainter extends CustomPainter {
 
   @override
   bool hitTest(Offset position) {
-    // return city.path.contains(position.scale(10/6, 10/6));
-    return city.path.contains(position);
+    double inverseScale = sizeController.inverseOfScale(_scale);
+    return city.path.contains(position.scale(inverseScale, inverseScale));
   }
 }

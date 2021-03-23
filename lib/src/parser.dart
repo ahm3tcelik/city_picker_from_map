@@ -36,7 +36,6 @@ class Parser {
       sizeController.addBounds(city.path.getBounds());
       cityList.add(city);
     });
-    print(cityList.first.path.getBounds());
     return cityList;
   }
 }

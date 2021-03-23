@@ -61,12 +61,10 @@ class CityPickerMapState extends State<CityPickerMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          for (var city in _cityList) _buildStackItem(city),
-        ],
-      ),
+    return Stack(
+      children: [
+        for (var city in _cityList) _buildStackItem(city),
+      ],
     );
   }
 

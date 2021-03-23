@@ -19,8 +19,9 @@ class _HomeViewState extends State<HomeView> {
           IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
               onPressed: () {
+                _mapKey.currentState?.clearSelect();
                 setState(() {
-                  _mapKey.currentState?.clearSelect();
+                  selectedCity = null;
                 });
               })
         ],

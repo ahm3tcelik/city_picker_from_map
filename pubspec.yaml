@@ -1,7 +1,6 @@
 name: city_picker_from_map
 description: A flutter package for select a city from svg map.
 version: 0.0.1
-author: Ahmet Çelik
 homepage: https://github.com/ahm3tcelik/city_picker_from_map
 
 environment:
